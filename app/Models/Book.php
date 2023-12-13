@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Book extends Model
 {
@@ -18,7 +19,6 @@ class Book extends Model
     /**
      * Get Cover URL
      *
-     * @param  string  $value
      * @return string
      */
     public function getCoverUrlAttribute()
@@ -31,7 +31,7 @@ class Book extends Model
     }
 
     // Relasi ke categories, satu buku merujuk ke banyak kategori
-    public function categories()
+    public function categories() :BelongsToMany
     {
         return $this->belongsToMany(
             Category::class,

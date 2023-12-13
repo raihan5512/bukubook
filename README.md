@@ -9,5 +9,9 @@
 - Run `php artisan key:generate`
 - Run `npm install`
 - Run `npm run build`
-- Run `php artisan migrate` if needed
+- Run `php artisan migrate` if needed (fresh & --seed with default user)
 - Run `php artisan storage:link` if needed
+
+## Default Account in seeder
+- admin@bukubook.com:4dm1n
+- user@bukubook.com:us3r
