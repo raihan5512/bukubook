@@ -19,7 +19,7 @@ jobs:
       run: composer install -n --prefer-dist
 
     - name: prepare laravel application
-      run:
+      run: |
         cp .env.example .env
         php artisan key:generate
 
