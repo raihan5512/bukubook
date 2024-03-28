@@ -1,27 +1,45 @@
-name : Run Tests
+name: Bukubook Test
 
 on: [push]
 
 jobs:
-  test:
-    name: Run Tests
-    runs-on: ubuntu'latest
+  phpstan:
+    name: phpstan
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: bukubook
+        ports:
+          - 3306:3306
+
     steps:
-    - uses : actions/chechout@v3
-    - name : setup php
-      uses : shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, mysql, pdo_mysql_ bcmath, soap, gd, exif, iconv
-        coverage : none
+      - uses: actions/checkout@v2
 
-    - name: Run Composer install
-      run: composer install -n --prefer-dist
-
-    - name: prepare laravel application
-      run: |
-        cp .env.example .env
-        php artisan key:generate
-
-    - name: run PHPStan
-      run: ./vendor/bin/phpstan --error-format-github
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+      - name: Install composer dependencies
+        run: composer install -n --prefer-dist
+      - name: Run Static Analysis
+        run: ./vendor/bin/phpstan --error-format=github
+      - name: Create env
+        run: php -r "file_exists('.env') || copy('.env.ci', '.env');"
+      - name: Generate env key
+        run: php artisan key:generate
+      - name: Create Database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+      - name: Migrate
+        run: php artisan migrate --seed
+      - name: Install Front-end
+        run: |
+          npm install
+          npm run build
+      - name: Feature Test
+        run: php artisan test
