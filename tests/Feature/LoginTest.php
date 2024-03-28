@@ -54,13 +54,13 @@ class LoginTest extends TestCase
         $response->assertRedirect("/home");
 
         //buat request method POST ke /logout
-        $response=$this->post("/Logout");
+        $response=$this->post("/logout");
 
         //request get ke/Home
         $responseHome=$this->get("/home");
 
         //assert redirect ke halmaan login
-        $responseHome->assertRedirect("/home");
+        $responseHome->assertRedirect("/login");
 
 
     }
